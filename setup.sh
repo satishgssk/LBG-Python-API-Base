@@ -19,6 +19,7 @@ build_docker(){
     echo "Building the image"
     sleep 3
     docker build -t $DOCKER_IMAGE .
+    docker push $DOCKER_IMAGE
 }
 # Function to modify app
 modify_app(){
@@ -31,7 +32,8 @@ modify_app(){
 run_docker(){
     echo "Running the docker container"
     sleep 3
-    docker run -d -p 8080:$PORT -e PORT=$PORT --name $DOCKER_IMAGE
+    docker pull $DOCKER_IMAGE
+    docker run -d -p 80:$PORT -e PORT=$PORT --name $DOCKER_CONTAINER_NAME $DOCKER_IMAGE
 }
 
 # Main script execution

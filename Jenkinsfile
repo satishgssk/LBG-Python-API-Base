@@ -18,8 +18,9 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
+                ssh jenkins@satish-deploy <<EOF
                 docker stop py-app && echo "Python app stopped" || echo "Python app is not up and running"
-                docker run -d -p 80:80 --name py-app satishgssk/lbg-py-app
+                docker run -d -p 80:80 --name py-app satishgssk/lbg-py
                 '''
             }
         }

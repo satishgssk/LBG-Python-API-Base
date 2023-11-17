@@ -5,7 +5,7 @@ pipeline{
         steps{
             sh '''
             ssh jenkins@satish-deploy <<EOF
-            ./setup1.sh
+            bash setup1.sh
             '''
         }
     }

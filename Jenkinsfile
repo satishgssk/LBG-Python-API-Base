@@ -1,5 +1,6 @@
 pipeline{
     agent any
+    stages {
     stage('Build_Run'){
         steps{
             sh '''
@@ -7,5 +8,6 @@ pipeline{
             sh setup.sh
             '''
         }
+    }
     }
 }

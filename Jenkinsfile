@@ -4,14 +4,14 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
-                docker build -t satishgssk/lbg-py-app .
+                docker build -t satishgssk/lbg-py .
                 '''
            }
         }
         stage('Push') {
             steps {
                 sh '''
-                docker push satishgssk/lbg-py-app
+                docker push satishgssk/lbg-py
                 '''
             }
         }

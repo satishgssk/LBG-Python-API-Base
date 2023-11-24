@@ -3,7 +3,7 @@ pipeline {
     environment {
         GCR_CREDENTIALS_ID = "satish-gcr" // The ID you provided in Jenkins credentials
         IMAGE_NAME = "satish-py-restapi"
-        GCR_URL = "eu.gcr.io/lbg-mea-a5"
+        GCR_URL = "eu.gcr.io/lbg-mea-15"
     }
     stages {
         stage('Build and Push to GCR') {

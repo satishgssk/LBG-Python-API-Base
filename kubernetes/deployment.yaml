@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: flask-container
-        image: eu.gcr.io/lbg-mea-15/satish-py-restapi:v4
+        image: eu.gcr.io/lbg-mea-15/satish-py-restapi:5
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

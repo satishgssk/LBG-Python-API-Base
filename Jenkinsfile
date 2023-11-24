@@ -3,7 +3,7 @@ pipeline {
     environment {
         GCR_CREDENTIALS_ID = "satish-gcr" // The ID you provided in Jenkins credentials
         IMAGE_NAME = "satish-py-restapi"
-        GCR_URL = 'eu.gcr.io/[PROJECT_ID_GOES_HERE]'
+        GCR_URL = 'eu.gcr.io/lbg-mea-15'
         PROJECT_ID = 'lbg-mea-15'
         CLUSTER_NAME = 'satish-cluster'
         LOCATION = 'europe-west2-b'

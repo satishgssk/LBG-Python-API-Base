@@ -7,7 +7,7 @@ pipeline {
         PROJECT_ID = 'lbg-mea-15'
         CLUSTER_NAME = 'satish-cluster'
         LOCATION = 'europe-west2-b'
-        CREDENTIALS_ID = 'satish-gke'
+        CREDENTIALS_ID = '1eb6a6e2-6fed-4099-89fa-896cb91bdc39'
     }
     stages {
         stage('Build and Push to GCR') {

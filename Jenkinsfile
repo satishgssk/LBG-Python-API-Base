@@ -27,43 +27,53 @@ pipeline {
                }
             }
         }
-        stage('Deploy to GKE') {
+        stage('Deploy - Staging') {
             steps {
                 script {
                     // Deploy to GKE using Jenkins Kubernetes Engine Plugin
-                    step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'kubernetes/deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+                    step([
+                        $class: 'KubernetesEngineBuilder', 
+                        projectId: env.PROJECT_ID, 
+                        clusterName: env.CLUSTER_NAME, 
+                        location: env.LOCATION, 
+                        manifestPattern: 'kubernetes/deployment.yaml', 
+                        credentialsId: env.CREDENTIALS_ID, 
+                        verifyDeployments: true,
+                        namespace: 'staging'])
                 }
             }
-
         }
-        // stage('Staging Deploy') {
-        //     steps {
-        //        sh '''
-        //         sed -e 's,{{userName}},'${YOUR_NAME}', g;' -e 's,{{version}},'${BUILD_NUMBER}',g;' task1-app-manifest.yaml | kubectl apply -f - --namespace staging
-        //         kubectl apply -f task1-nginx-manifest.yaml --namespace staging
-        //         '''
-        //     }
-        // }
-        // stage('Quality Check') {
-        //     steps {
-        //        sh '''
-        //         sleep 50
-        //         export STAGING_IP=\$(kubectl get svc -o json --namespace staging | jq '.items[] | select(.metadata.name == "task1-nginx") | .status.loadBalancer.ingress[0].ip' | tr -d '"')
-        //         pip3 install requests
-        //         python3 test-app.py
-        //         '''
-        //     }
-        // }
-        // stage('Prod Deploy') {
-        //     steps { 
-        //         sh '''
-        //         sed -e 's,{{userName}},'${YOUR_NAME}', g;' -e 's,{{version}},'${BUILD_NUMBER}',g;' task1-app-manifest.yaml | kubectl apply -f - --namespace prod
-        //         kubectl apply -f task1-nginx-manifest.yaml --namespace prod
-        //         sleep 50
-        //         kubectl get services --namespace prod
-        //         '''
-        //     }
-        // }
+        stage('Quality Check') {
+            steps {
+                script {
+                    // Deploy to GKE using Jenkins Kubernetes Engine Plugin
+                    sh '''
+                        gcloud config set account satish-jenkins@lbg-mea-15.iam.gserviceaccount.com
+                        sleep 50
+                        export STAGING_IP=\$(kubectl get svc -o json --namespace staging | jq '.items[] | select(.metadata.name == "flask-deployment") | .status.loadBalancer.ingress[0].ip' | tr -d '"')
+                        pip3 install requests
+                        python3 lbg.test.py
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to GKE - prod') {
+            steps {
+                script {
+                    // Deploy to GKE using Jenkins Kubernetes Engine Plugin
+                    step([
+                        $class: 'KubernetesEngineBuilder', 
+                        projectId: env.PROJECT_ID, 
+                        clusterName: env.CLUSTER_NAME, 
+                        location: env.LOCATION, 
+                        manifestPattern: 'kubernetes/deployment.yaml', 
+                        credentialsId: env.CREDENTIALS_ID, 
+                        verifyDeployments: true,
+                        namespace: 'prod'])
+                }
+            }
+        }
     }
 
 }

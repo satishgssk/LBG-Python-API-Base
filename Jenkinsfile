@@ -3,7 +3,11 @@ pipeline {
     environment {
         GCR_CREDENTIALS_ID = "satish-gcr" // The ID you provided in Jenkins credentials
         IMAGE_NAME = "satish-py-restapi"
-        GCR_URL = "eu.gcr.io/lbg-mea-15"
+        GCR_URL = 'eu.gcr.io/[PROJECT_ID_GOES_HERE]'
+        PROJECT_ID = 'lbg-mea-15'
+        CLUSTER_NAME = 'satish-cluster'
+        LOCATION = 'europe-west2-b'
+        CREDENTIALS_ID = 'satish-gke'
     }
     stages {
         stage('Build and Push to GCR') {
@@ -22,6 +26,15 @@ pipeline {
                 sh "docker push ${GCR_URL}/${IMAGE_NAME}:${BUILD_NUMBER}"
                }
             }
+        }
+        stage('Deploy to GKE') {
+            steps {
+                script {
+                    // Deploy to GKE using Jenkins Kubernetes Engine Plugin
+                    step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'kubernetes/deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+                }
+            }
+
         }
         // stage('Staging Deploy') {
         //     steps {
